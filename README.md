@@ -52,18 +52,11 @@
 5. Access the app at `http://localhost:8080/`
 
 ---
-
-## 📸 Screenshots
-
-(Add screenshots of your UI here — home, cart, checkout, order history pages.)
-
----
-
 ## 👤 Author
 
 **Siva Teja**
 Java Developer | Spring Boot | Hibernate | MySQL | Angular (Basics)
-📧 [Your Email Here]
+email: sivateja9295@gmail.com
 
 ---
 
