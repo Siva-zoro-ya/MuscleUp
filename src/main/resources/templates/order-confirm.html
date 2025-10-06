@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Confirmation</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background-color: #fef6e4;
+            color: #1f2937;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color:  #1f2937;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color:  #fbbf24;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #b45309;
+        }
+
+        .summary {
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+
+        .btn-home {
+            margin-top: 30px;
+            padding: 12px 24px;
+            background-color: #fbbf24;
+            color: #1f2937;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-home:hover {
+            background-color: #b45309;
+            color: #fef6e4;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="/home">MUSCLE UP</a>
+    <div>
+		<b><a href="/orders" th:href="@{/orders/history}">MyOrders</a></b>
+		<b><a href="/logout" th:href="@{/users/logout}">Logout</a></b>    
+    </div>
+</nav>
+
+<!-- Confirmation Card -->
+<div class="container">
+    <h1>Order Placed Successfully! 🎉</h1>
+    <div class="summary">
+        <p>Thankyou For Choosing Muscle Up!! </p>
+        <p><strong>Delivery Address:</strong></p>
+        <p th:text="${deliveryAddress}">123 Default St, Fitville</p>
+        <p>Your products will be delivered within 3-5 working days.</p>
+    </div>
+
+    <a href="/home" class="btn-home">Continue Shopping</a>
+</div>
+
+</body>
+</html>

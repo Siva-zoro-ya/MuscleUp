@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Muscle Up</title>
+    <style>
+        :root {
+            --primary: #fbbf24;   
+            --secondary: #b45309; 
+            --text: #1f2937;       
+            --background: #fef6e4; 
+            --text-light: #ffffff; 
+            --link-color: #1f2937; 
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .navbar {
+            background-color: var(--primary);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-brand {
+            color: var(--text-light);
+            font-size: 1.5rem;
+             font-weight: 800; 
+            text-decoration: none;
+        }
+        .nav-links a {
+            color: var(--link-color); 
+            margin-left: 1.5rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: var(--secondary); 
+        }
+        .login-container {
+            margin: auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        .login-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+        .input-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        .input-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn {
+            background-color: var(--primary);
+            color: var(--text-light);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background-color: var(--secondary);
+        }
+        .error-message {
+            color: red;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <b><a href="/" class="navbar-brand">MUSCLE UP</a></b>
+        <div class="nav-links">
+           <b><a href="/register" th:href="@{/users/register}" >Create an Account</a></b> 
+        </div>
+    </nav>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <h1 class="login-title">Login</h1>
+        <form th:action="@{/users/login}" method="post">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <div class="error-message" th:if="${error}">
+                <p th:text="${error}"></p>
+            </div>
+			<!-- Show success message from registration -->
+			    <div class="success-message" th:if="${param.success}">
+			        Registration successful! You can now log in.
+			    </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Muscle Up</title>
+    <style>
+        :root {
+            --primary: #fbbf24;   
+            --secondary: #b45309; 
+            --text: #1f2937;      
+            --background: #fef6e4; 
+            --text-light: #ffffff; 
+            --link-color: #1f2937; 
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background);
+            color: var(--text);
+        }
+        .navbar {
+            background-color: var(--primary);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-brand {
+            color: var(--text-light);
+            font-size: 1.5rem;
+          font-weight: 800; 
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .nav-links a {
+            color: var(--link-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .welcome-section {
+            margin: 2rem 0;
+            padding: 0 1rem;
+        }
+        .welcome-heading {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        .welcome-subtext {
+            color: var(--text);
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 0;
+        }
+        .filter-section {
+            margin: 1rem 0 2rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .filter-section label {
+            font-weight: 600;
+            color: var(--text);
+        }
+        .filter-section select {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+            padding-bottom: 3rem;
+        }
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-image {
+            height: 200px;
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .product-info {
+            padding: 1.2rem;
+        }
+        .product-title {
+            font-size: 1.1rem;
+            margin: 0.5rem 0;
+            color: var(--text);
+            font-weight: 600;
+        }
+        .product-price {
+            color: var(--secondary);
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .btn {
+            background-color: var(--primary);
+            color: var(--text-light);
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-weight: 600;
+        }
+        .btn:hover {
+            background-color: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/home" class="navbar-brand">MUSCLE UP</a>
+		<!-- Search Bar -->
+		<div class="search-bar" style="margin: 1rem 0; text-align: center;">
+		    <form th:action="@{/home}" method="get" style="display: inline-flex; gap: 0.5rem;">
+		        <input 
+		            type="text" 
+		            name="keyword" 
+		            placeholder="Search products..." 
+		            th:value="${param.keyword}" 
+		            style="padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #ccc; min-width: 250px;"/>
+		        <button 
+		            type="submit" 
+		            style="background-color: #fbbf24; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; color: #1f2937; font-weight: 800;  cursor: pointer;">
+		            Search
+		        </button>
+		    </form>
+		</div>
+		
+		<!--add item link-->
+		<div style="text-align: right; margin: 1rem;">
+		    <button onclick="openAddProductModal()" 
+		            style="background-color: #fbbf24; color: #1f2937; padding: 8px 16px; border: none; border-radius: 8px;  font-weight: 800; ">
+		        + Add Product
+		    </button>
+		</div>
+
+
+		<div class="nav-links">
+			<b><a href="/cart" th:href="@{/cart}">Cart</a></b>
+           <b><a href="/orders" th:href="@{/orders/history}">MyOrders</a></b>
+           <b><a href="/logout" th:href="@{/users/logout}">Logout</a></b>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 class="welcome-heading">Welcome! <span th:text="${session.currentUser.name}"></span>,</h1>
+            <p class="welcome-subtext">Discover our premium supplements and accessories</p>
+        </div>
+
+		<!-- Filter Section -->
+		<div class="filter-section">
+		    <form id="filterForm" th:action="@{/home}" method="get">
+		        <label for="category">Filter:</label>
+		        <select id="category" name="category" onchange="submitCategoryFilter()">
+		            <option value="Supplements" th:selected="${param.category == 'Supplements'}">Supplements</option>
+		            <option value="Accessories" th:selected="${param.category == 'Accessories'}">Accessories</option>
+		            <option value="ALL" th:selected="${param.category == null or param.category == ''}">All Products</option>
+		        </select>
+		    </form>
+		</div>
+        <!-- Product Grid -->
+        <div class="product-grid">
+            <div th:each="product : ${products}" class="product-card">
+                <div class="product-image">[Image for [[${product.name}]]]</div>
+                <div class="product-info">
+                    <h3 class="product-title" th:text="${product.name}"></h3>
+                    <p class="product-price" th:text="'₹' + ${product.price}"></p>
+					<!--  button for Add to Cart -->
+					<form th:action="@{/cart/add}" method="post">
+					    <input type="hidden" name="productId" th:value="${product.id}" />
+					    <input type="hidden" name="quantity" value="1" />
+					    <button type="submit" class="btn">Add to Cart</button>
+					</form>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<!-- Add Product Modal -->
+	<div id="addProductModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+	     background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+	    
+	    <div style="background-color: #fef6e4; padding: 2rem; border-radius: 12px; width: 300px; color: #1f2937; position: relative;">
+	        <h2 style="margin-top: 0; text-align: center; color: #b45309;">Add New Product</h2>
+	        
+	        <form method="post" action="/home/add-product" style="display: flex; flex-direction: column; gap: 0.75rem;">
+	            <input type="text" name="name" placeholder="Product Name" required 
+	                   style="padding: 8px; border: 1px solid #b45309; border-radius: 6px; background: #fff;">
+	            
+	            <div>
+	                <label><input type="radio" name="category" value="Supplements" checked> Supplements</label><br>
+	                <label><input type="radio" name="category" value="Accessories"> Accessories</label>
+	            </div>
+
+	            <input type="number" name="price" step="0.01" placeholder="Price (₹)" required 
+	                   style="padding: 8px; border: 1px solid #b45309; border-radius: 6px; background: #fff;">
+
+	            <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+	                <button type="button" onclick="closeAddProductModal()" 
+	                        style="background: transparent; border: 1px solid #b45309; padding: 6px 12px; border-radius: 6px; color: #b45309;">
+	                    Cancel
+	                </button>
+	                <button type="submit" 
+	                        style="background: #fbbf24; border: none; padding: 6px 12px; border-radius: 6px; color: #1f2937; font-weight: bold;">
+	                    Add Product
+	                </button>
+	            </div>
+	        </form>
+	    </div>
+	</div>
+	<script>
+		//written to direct allproducts filter to home
+	    function submitCategoryFilter() {
+	        const category = document.getElementById("category").value;
+	        if (category === "ALL") {
+	           
+	            window.location.href = "/home";
+	        } else {
+	            document.getElementById("filterForm").submit();
+	        }
+	    }
+	
+		
+	//add product button
+		function openAddProductModal() {
+		       document.getElementById("addProductModal").style.display = "flex";
+		   }
+		   function closeAddProductModal() {
+		       document.getElementById("addProductModal").style.display = "none";
+		   }
+	</script>
+</body>
+</html>

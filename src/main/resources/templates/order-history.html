@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Orders - Muscle Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fef6e4;
+            color: #1f2937;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #fbbf24;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color:  #1f2937;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: #b45309;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .order-table th, .order-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .order-table th {
+            background-color: #fbbf24;
+            color: #1f2937;
+        }
+
+        .status {
+            font-weight: bold;
+            color: #b45309;
+        }
+
+        .no-orders {
+            text-align: center;
+            color: gray;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <a href="/home">MUSCLE UP</a>
+    <div>
+        <a th:href="@{/cart}">Cart</a>
+        <a th:href="@{/orders/history}">My Orders</a>
+        <a th:href="@{/users/logout}">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <h1>My Orders</h1>
+
+    <div th:if="${orders.isEmpty()}" class="no-orders">
+        <p>You haven't placed any orders yet.</p>
+    </div>
+
+    <table class="order-table" th:if="${!orders.isEmpty()}">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price (₹)</th>
+                <th>Total</th>
+                <th>Address</th>
+                <th>Status</th>
+                <th>Ordered At</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.product.name}">Whey Protein</td>
+                <td th:text="${order.quantity}">2</td>
+                <td th:text="${order.priceAtOrder}">1200</td>
+                <td th:text="${order.quantity * order.priceAtOrder}">2400</td>
+                <td th:text="${order.deliveryAddress}">Some Address</td>
+                <td><span class="status" th:text="${order.status}">PENDING</span></td>
+                <td th:text="${#temporals.format(order.orderDate, 'dd MMM yyyy HH:mm')}">24 Jun 2025</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
