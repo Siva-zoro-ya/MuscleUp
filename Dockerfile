@@ -11,6 +11,7 @@ WORKDIR /app
 # Copy built JAR file from builder stage
 COPY --from=builder /app/target/Muscleup-0.0.1-SNAPSHOT.jar app.jar
 
+
 # Expose custom port (8081 instead of 8080 or 9090)
 EXPOSE 7080 
 
