@@ -12,9 +12,9 @@ WORKDIR /app
 COPY --from=builder /app/target/Muscleup-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose custom port (8081 instead of 8080 or 9090)
-EXPOSE 7080
+EXPOSE 7080 
 
 # Run Spring Boot with overridden port
-ENTRYPOINT ["java", "-jar", "app.jar", "--server.port=8081"]
+ENTRYPOINT ["java", "-jar", "app.jar", "--server.port=7080"]
 
 
