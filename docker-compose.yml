@@ -17,7 +17,7 @@ services:
     build: .
     container_name: muscleup-app
     ports:
-      - "7080:7070"
+      - "7080:7080"
     depends_on:
       - mysql
     environment:
