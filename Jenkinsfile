@@ -8,8 +8,8 @@ pipeline {
 
     environment {
         SONAR_URL = 'http://localhost:9090'
-        SONAR_CRED = credentials('sonarqube-token')  // Create this in Jenkins → Manage Credentials
-        DOCKERHUB_CRED = credentials('dockerhubid') // Jenkins credentials for DockerHub
+        SONAR_CRED = credentials('sonarqube-token')
+        DOCKERHUB_CRED = credentials('dockerhubid')
         IMAGE_NAME = 'muscleup-app'
     }
 
@@ -22,14 +22,14 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQubeServer') {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=muscleup -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_CRED'
+                    bat "mvn sonar:sonar -Dsonar.projectKey=muscleup -Dsonar.host.url=%SONAR_URL% -Dsonar.login=%SONAR_CRED%"
                 }
             }
         }
@@ -44,27 +44,23 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    sh 'docker build -t $IMAGE_NAME .'
-                }
+                bat "docker build -t %IMAGE_NAME% ."
             }
         }
 
         stage('Push to DockerHub') {
             steps {
-                script {
-                    sh """
-                        echo $DOCKERHUB_CRED_PSW | docker login -u $DOCKERHUB_CRED_USR --password-stdin
-                        docker tag $IMAGE_NAME $DOCKERHUB_CRED_USR/$IMAGE_NAME:latest
-                        docker push $DOCKERHUB_CRED_USR/$IMAGE_NAME:latest
-                    """
-                }
+                bat """
+                    echo %DOCKERHUB_CRED_PSW% | docker login -u %DOCKERHUB_CRED_USR% --password-stdin
+                    docker tag %IMAGE_NAME% %DOCKERHUB_CRED_USR%/%IMAGE_NAME%:latest
+                    docker push %DOCKERHUB_CRED_USR%/%IMAGE_NAME%:latest
+                """
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 7080:7080 --name muscleup-app $DOCKERHUB_CRED_USR/$IMAGE_NAME:latest'
+                bat "docker run -d -p 7080:7080 --name muscleup-app %DOCKERHUB_CRED_USR%/%IMAGE_NAME%:latest"
             }
         }
     }
