@@ -29,7 +29,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('local-sonarqube') {
-                    bat "mvn sonar:sonar -Dsonar.projectKey=muscleup -Dsonar.host.url=%SONAR_URL% -Dsonar.login=%SONAR_CRED%"
+                    bat "mvn sonar:sonar -Dsonar.projectKey=muscleup -Dsonar.host.url=%SONAR_URL% -Dsonar.token=%SONAR_CRED%"
                 }
             }
         }
