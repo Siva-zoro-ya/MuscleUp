@@ -28,7 +28,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQubeServer') {
+                withSonarQubeEnv('local-sonarqube') {
                     bat "mvn sonar:sonar -Dsonar.projectKey=muscleup -Dsonar.host.url=%SONAR_URL% -Dsonar.login=%SONAR_CRED%"
                 }
             }
