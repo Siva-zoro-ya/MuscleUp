@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        SONAR_URL = 'http://localhost:9090'
+        SONAR_URL = 'http://localhost:9000'
         SONAR_CRED = credentials('sonarqube-token')
         DOCKERHUB_CRED = credentials('dockerhubid')
         IMAGE_NAME = 'muscleup-app'
