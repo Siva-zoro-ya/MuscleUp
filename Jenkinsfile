@@ -1,9 +1,9 @@
 pipeline {
-    agent any
-
-    tools {
-        maven 'Maven 3.9'
-        jdk 'JDK17'
+    agent {
+        docker {
+            image 'maven:3.9.5-eclipse-temurin-17'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
     }
 
     environment {
@@ -22,37 +22,37 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                bat 'mvn clean package -DskipTests'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('local-sonarqube') {
-                    bat "mvn sonar:sonar -Dsonar.projectKey=muscleup -Dsonar.host.url=%SONAR_URL% -Dsonar.token=%SONAR_CRED%"
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=muscleup -Dsonar.host.url=$SONAR_URL -Dsonar.token=$SONAR_CRED'
                 }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t %IMAGE_NAME% ."
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Push to DockerHub') {
             steps {
-                bat """
-                    echo %DOCKERHUB_CRED_PSW% | docker login -u %DOCKERHUB_CRED_USR% --password-stdin
-                    docker tag %IMAGE_NAME% %DOCKERHUB_CRED_USR%/%IMAGE_NAME%:latest
-                    docker push %DOCKERHUB_CRED_USR%/%IMAGE_NAME%:latest
-                """
+                sh '''
+                    echo $DOCKERHUB_CRED_PSW | docker login -u $DOCKERHUB_CRED_USR --password-stdin
+                    docker tag $IMAGE_NAME $DOCKERHUB_CRED_USR/$IMAGE_NAME:latest
+                    docker push $DOCKERHUB_CRED_USR/$IMAGE_NAME:latest
+                '''
             }
         }
 
         stage('Deploy') {
             steps {
-                bat "docker run -d -p 7080:7080 --name muscleup-app %DOCKERHUB_CRED_USR%/%IMAGE_NAME%:latest"
+                sh 'docker run -d -p 7080:7080 --name muscleup-app $DOCKERHUB_CRED_USR/$IMAGE_NAME:latest'
             }
         }
     }
